@@ -9,4 +9,5 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function () {
     Route::get('list-articles', [App\Http\Controllers\API\v1\ArticleController::class, 'index']);
+    Route::post('store-articles', [App\Http\Controllers\API\v1\ArticleController::class, 'store']);
 });

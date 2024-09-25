@@ -69,4 +69,26 @@ class ArticleController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function show($id){
+
+        $article = Article::where('id',$id)->first();
+
+
+        if($article) {
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'data' => [
+                    'title' => $article->title,
+                    'content' => $article->content,
+                    'published_date' => $article->published_date
+                ]
+            ], Response::HTTP_OK);
+        }else { 
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND, 
+                'message' => 'article not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
 }

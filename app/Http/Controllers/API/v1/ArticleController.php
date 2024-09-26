@@ -91,4 +91,44 @@ class ArticleController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
     }
+
+    public function update(Request $request, $id){
+        $article = Article::findOrFail($id);
+
+        if(!$article) {
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'article not found' 
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+            'published_date' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        try {
+            $article->update([
+                'title' => $request->title,
+                'content' => $request->content,
+                'published_date' => Carbon::create($request->published_date)->toDateString(),
+            ]);
+
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'article update success'
+            ], Response::HTTP_OK);
+        } catch (Exception $e) {
+            Log::error('Error updating data :'. $e->getMessage());
+            return response()->json([
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Failed store data to db'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

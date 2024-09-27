@@ -131,4 +131,26 @@ class ArticleController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function destroy($id){
+
+        $article = Article::findOrFail($id);
+
+        try {
+            $article->delete();
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'article successfully deleted'
+            ], Response::HTTP_OK);
+        } catch (Exception $e) {
+            Log::error('Error deleting data :'. $e->getMessage());
+            return response()->json([
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Failed delete data from db'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        
+    }
+
 }

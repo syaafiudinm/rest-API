@@ -13,10 +13,18 @@ use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
-        $articles = Article::latest('published_date')->get();
+        $query = Article::query()->latest('published_date');
+
+        $keyword = $request->input('title');
+
+        if($keyword) {
+            $query->where('title', 'like', '%'.$keyword.'%'); 
+        }  
+
+        $articles = $query->paginate(3);
 
         if($articles->isEmpty()) {
             return response()->json([
@@ -149,8 +157,6 @@ class ArticleController extends Controller
                 'message' => 'Failed delete data from db'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        
     }
 
 }

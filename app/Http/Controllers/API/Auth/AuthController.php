@@ -67,15 +67,16 @@ class AuthController extends Controller
                     'message' => 'Invalid Credentials'
                  ],Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
+            }
 
             $token = $user->createToken('login_token')->plainTextToken;
             return response()->json([
                 'status' => Response::HTTP_OK,
                 'message' => 'Login Success',
+                'data' => $user,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ],Response::HTTP_OK);
-        }
     }
 
     public function logout(){

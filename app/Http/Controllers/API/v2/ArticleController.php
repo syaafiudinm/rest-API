@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\v2;
 
+use App\Http\Resources\ArticleCollection;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,17 +30,7 @@ class ArticleController extends Controller
                 'message' => 'Article Empty'
             ], Response::HTTP_NOT_FOUND);
         }else {
-            return response()->json([
-                'data' => $articles->map(function ($article) {
-                    return [
-                        'title' => $article->title,
-                        'content' => $article->content,
-                        'published_date' => $article->published_date
-                    ];
-                }),
-                'message' => 'list Article',
-                'status' => Response::HTTP_OK
-            ], Response::HTTP_OK);
+            return new ArticleCollection($articles);
         }
 
     }

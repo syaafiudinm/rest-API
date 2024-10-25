@@ -28,7 +28,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'password' => Hash::make($request->password),
             ]);
 
             $token = $user->createToken('register_token')->plainTextToken;
@@ -37,7 +37,8 @@ class AuthController extends Controller
                'status' => Response::HTTP_OK,
                'data' => $user,
                'access_token' => $token,
-               'type' => 'Bearer'
+               'type' => 'Bearer',
+               'message' => 'Register Success'
             ],Response::HTTP_OK);
         } catch (Exception $e) {
             return response()->json([
@@ -63,9 +64,9 @@ class AuthController extends Controller
         if (!Auth::attempt($ceredentials)) {
             if (!$user||Hash::check($request['password'], $user->password)) {
                 return response()->json([
-                    'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Invalid Credentials'
-                 ],Response::HTTP_INTERNAL_SERVER_ERROR);
+                 ],Response::HTTP_UNAUTHORIZED);
                 }
             }
 

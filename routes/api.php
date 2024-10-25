@@ -23,8 +23,9 @@ Route::prefix('v1')->group(function () {
 
 Route::prefix('v2')->group(function () {
     Route::get('list-articles', [App\Http\Controllers\API\v2\ArticleController::class, 'index']);
-    Route::resource('articles', ArticleController::class);
+    Route::resource('article', ArticleController::class);
 });
 
 Route::post('register', [App\Http\Controllers\Api\Auth\AuthController::class, 'register']);
 Route::post('login', [App\Http\Controllers\Api\Auth\AuthController::class, 'login']);
+    

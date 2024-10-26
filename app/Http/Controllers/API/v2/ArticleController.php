@@ -42,14 +42,9 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
 
-        $token = $request->bearerToken();
+        $this->unauthenticated($request);
 
-        if(!$token) {
-            return response()->json([
-                'message' => 'Unauthorized, please login first'
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
+        
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
@@ -104,13 +99,7 @@ class ArticleController extends Controller
     public function update(Request $request, $id)
     {
 
-        $token = $request->bearerToken();
-
-        if(!$token) {
-            return response()->json([
-                'message' => 'Unauthorized, cant updated, please login first'
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+        $this->unauthenticated($request);
 
         $article = Article::findOrFail($id);
 
@@ -154,13 +143,7 @@ class ArticleController extends Controller
     public function destroy(Request $request, int $id)
     {
 
-        $token = $request->bearerToken();
-
-        if(!$token) {
-            return response()->json([
-                'message' => 'Unauthorized, please login first'
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+        $this->unauthenticated($request);
 
         $article = Article::findOrFail($id);
 
@@ -177,5 +160,17 @@ class ArticleController extends Controller
                 'message' => 'Failed delete data from db'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function unauthenticated(Request $request){
+
+        $token = $request->bearerToken();
+
+        if(!$token) {
+            return response()->json([
+                'message' => 'Unauthorized, please login first'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
     }
 }

@@ -23,9 +23,12 @@ Route::prefix('v1')->group(function () {
 
 Route::prefix('v2')->group(function () {
     Route::get('list-articles', [App\Http\Controllers\API\v2\ArticleController::class, 'index']);
-    Route::resource('article', ArticleController::class);
+    Route::middleware('auth:sanctum')->group(function(){
+        Route::resource('article', ArticleController::class);
+    });
+    Route::get('/unauthenticated', [App\Http\Controllers\API\v2\ArticleController::class, 'unauthenticated'])->name('guest');
 });
 
 Route::post('register', [App\Http\Controllers\Api\Auth\AuthController::class, 'register']);
-Route::post('login', [App\Http\Controllers\Api\Auth\AuthController::class, 'login']);
+Route::post('login', [App\Http\Controllers\Api\Auth\AuthController::class, 'login'])->name('login');
     
